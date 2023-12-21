@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POST Request Test</title>
+</head>
+<body>
+    <h1>POST Request Test</h1>
+    <form id="postForm">
+        <label for="user_id">User ID:</label>
+        <input type="text" id="user_id" name="user_id" value="user_2VgCI4SWPiAgpPIBgCwGBFIRo1P">
+        <br>
+        <label for="message">Message:</label>
+        <input type="text" id="message" name="message" value="Hello, companion!">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="responseMessage"></div>
+
+    <script>
+        document.getElementById("postForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const user_id = document.getElementById("user_id").value;
+            const message = document.getElementById("message").value;
+
+            const response = await fetch('http://localhost:5001/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+                body: JSON.stringify({
+                    user_id: user_id,
+                    message: message,
+                })
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const actualMessage = responseData.response;
+                document.getElementById("responseMessage").textContent = `Response: ${actualMessage}`;
+            } else {
+                document.getElementById("responseMessage").textContent = 'Failed to send the POST request. Status: ' + response.status;
+            }
+        });
+    </script>
+</body>
+</html>

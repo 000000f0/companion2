@@ -1,0 +1,215 @@
+<body>
+   <script>
+      // 👇 PUT YOUR API KEY HERE 👇
+      window.__clerk_frontend_api = 'pk_test_bmVhcmJ5LWNhbGYtOTAuY2xlcmsuYWNjb3VudHMuZGV2JA';
+      // 👆 PUT YOUR API KEY HERE 👆
+    </script>
+    <script src="https://nearby-calf-90.clerk.accounts.dev/npm/@clerk/clerk-js@4/dist/clerk.browser.js"></script>
+    
+      <script>
+          const script = document.createElement('script');
+          script.setAttribute('data-clerk-publishable-key', 'pk_test_bmVhcmJ5LWNhbGYtOTAuY2xlcmsuYWNjb3VudHMuZGV2JA');
+          script.async = true;
+          script.src = `https://nearby-calf-90.clerk.accounts.dev/npm/@clerk/clerk-js@4/dist/clerk.browser.js`;
+
+          script.addEventListener('load', async function () {
+            await window.Clerk.load();
+
+            const signInComponent = document.querySelector('#sign-in');
+
+            window.Clerk.openSignIn(signInComponent, {
+              
+            });
+          });
+          document.body.appendChild(script);
+      </script>
+    <header>
+      <div class="wrapper">
+        <div class="buttons">
+          <div id="orgswitcher"></div>
+          <div class="user-info">
+            <div id="userName"></div>
+            <div id="userbutton"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <p class="text">
+      </p>
+     <button onClick="signOut()">Sign Out</button>
+    </main>
+
+    <div id="errors"></div>
+    <div id="stage"></div>
+
+    <script>
+      const stage = document.getElementById('stage');
+      // clerkjs functions return null when there's an error and use console.info for reporting
+      // i recommend changing this, but for now we patch console.info to be able to display the err
+      const consoleInfo = console.info.bind(console);
+      console.info = message => {
+        const errs = document.getElementById('errors');
+        errs.innerHTML = '';
+        errs.append(el('p', message));
+        consoleInfo(message);
+      };
+
+  
+      function openSignIn() {
+     				 console.log("Opening sign-in");
+
+        Clerk.openSignIn();    
+      }
+
+      function openSignUp() {
+        Clerk.openSignUp();
+      }
+
+      function signOut() {
+      	console.log ('Signout');
+        Clerk.signOut();
+      }
+
+     
+      // utility fn
+      function el(tagName, content) {
+        const tag = document.createElement(tagName);
+        tag.innerText = content;
+        return tag;
+      }
+    </script>
+</body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+<div class="form-container">
+    <div id="menu">
+        <div class="menu-item">
+            <a href="#" onclick="loadImage('https://uploads-ssl.webflow.com/638dd1e89ba7270b5aecceaf/652385f7a50676b78695cc28_Consumer_Int.png')">Eva</a>
+            <div class="submenu">
+                <a href="#" onclick="loadVideo('https://www.youtube-nocookie.com/embed/videoseries?si=HjGlNpcZYAmnMP07&amp;list=PLr8xMLPr10xDqqHFATlEJ268eOjb18sFM')">Intro</a>
+                <a href="#" onclick="loadVideo('https://www.youtube-nocookie.com/embed/DP1A-qIMqZI?si=K5GdeN6A95-k-dtw&rel=0&mute=0')">The Companion</a>
+                <a href="#" onclick="loadVideo('https://www.youtube-nocookie.com/embed/VDrGP7F79eo?si=sbYE9WG2G1BwUfZ_?autoplay=1&rel=0&mute=0')">The Arsenal</a>
+            </div>
+        </div>
+        <div class="menu-item">
+            <a href="#" onclick="loadImage('https://uploads-ssl.webflow.com/638dd1e89ba7270b5aecceaf/652385e0fab9054d1abac8c6_Arch_diag_1.jpg')">Eva's World</a>
+            <div class="submenu"> 
+                <a href="#" onclick="loadVideo('https://www.youtube-nocookie.com/embed/videoseries?si=-KFpiEko9xCKUAbU&amp;list=PLr8xMLPr10xDVgItsiB5AxtAVKLuyOyGx&Rel=0')">Community</a>
+                <a href="#" onclick="loadVideo('https://www.youtube-nocookie.com/embed/Uua9M5Hko98')">Engine</a>
+                <a href="#" onclick="loadVideo('https://www.youtube-nocookie.com/embed/eu4uRxwCSts')">Economics</a>
+                
+            </div>
+        </div>
+    </div>
+          <button id="clearChatButton" type="button">Clear Chat</button>
+    <div id="videoContainer">
+        <div id="cloudMessages"></div>
+    </div>
+  
+    <div id="chatHistory" class="chat-history">
+    </div>
+
+    
+    <div class="spinner" id="spinner">
+            <img src="https://uploads-ssl.webflow.com/638dd1e89ba7270b5aecceaf/656f297733e3c6a39d23ebd2_e.svg" alt="E...">
+     </div>
+     <div class="form-input">
+            <form id="postForm">
+            <div class="input-group"> 
+                <input type="text" id="userMessage" name="userMessage" placeholder="Welcome, feel free to ask anything related...." required>
+
+            <input type="image" src="https://uploads-ssl.webflow.com/638dd1e89ba7270b5aecceaf/656f2977cbc93266fa518af3_e.png" alt="Send" id="submitImage">
+            </div>
+            </form>
+     </div>
+ 
+</div>
+
+
+</div>
+ <script src="functions.js"></script>
+ <script>        
+
+   // JavaScript to move a copy of the clicked message to the cloudMessages container
+    const cloudButtons = document.querySelectorAll('.cloud-button');
+    const cloudMessagesContainer = document.getElementById('cloudMessages');
+
+    cloudButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const message = button.parentElement;
+
+        // Clone the clicked message element
+        const cloudMessage = message.cloneNode(true);
+        cloudMessage.classList.add('cloud-message');
+
+        // Remove the button from the cloud message
+        const cloudButton = cloudMessage.querySelector('.cloud-button');
+        cloudButton.remove();
+
+        // Append the cloud message to the cloudMessages container
+        cloudMessagesContainer.innerHTML = '';
+        cloudMessagesContainer.appendChild(cloudMessage);
+    });
+    });
+
+    document.addEventListener('DOMContentLoaded', loadDefaultVideo);
+
+    document.getElementById('clearChatButton').addEventListener('click', () => {
+        const chatHistory = document.getElementById('chatHistory');
+        chatHistory.innerHTML = ''; 
+    });
+
+    document.getElementById('postForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    document.getElementById('spinner').style.display = 'block';
+
+    const userMessage = document.getElementById('userMessage').value;
+
+    try {
+      console.log( Clerk.user.primaryEmailAddress.emailAddress);
+      const response = await fetch('http://localhost:5001/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            user_id: Clerk.user.primaryEmailAddress.emailAddress,
+            companion_name : "Shrink", 
+            message: userMessage
+        }),
+      });
+
+
+      if (response.ok) {
+        const responseData = await response.json(); 
+        console.log('Lambda Response:', responseData);
+        const actualMessage = responseData.response; 
+        
+        addToChatHistory("" + userMessage, true); 
+        addToChatHistory("" + actualMessage);    
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            
+            const vidIntroWrapper = document.getElementById('VidIntroWrapper');
+            
+            vidIntroWrapper.style.height = '75VH';
+         });
+      } else {
+        console.error('Failed to send the POST request. Status:', response.status);
+        responseMessageElement.textContent = 'Failed to send the POST request. Status: ' + response.status;
+        responseMessageElement.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      responseMessageElement.textContent = 'An error occurred: ' + error.message;
+      responseMessageElement.style.display = 'block';
+    }
+    
+    document.getElementById('spinner').style.display = 'none';
+  });
+</script>
